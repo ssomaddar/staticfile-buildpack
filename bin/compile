@@ -28,14 +28,18 @@ cd $build_dir
 if [[ -e "Staticfile" && "$(grep 'root:' Staticfile)X" != "X" ]]; then
   root_dir=$(grep 'root:' Staticfile | sed -e 's/^root: *//;s/\s*$//')
   status "Root folder $root_dir"
+  echo 1
 else
   status "Using root folder"
+  echo 2
 fi
 root_dir=${root_dir:-.}
 if [[ ! -e ${root_dir} ]] ; then
+ echo 3
   error "the application Staticfile specifies a root directory \`${root_dir}\` that does not exist"
 fi
 if [[ ! -d ${root_dir} ]] ; then
+echo 4
   error "the application Staticfile specifies a root directory \`${root_dir}\` that is a plain file, but was expected to be a directory"
 fi
 
@@ -47,6 +51,7 @@ if [ ${build_dir}/public != ${root_dir_absolute} ]; then
   mv $root_dir_absolute/!(Staticfile|Staticfile.auth|manifest.yml|stackato.yml) $tmp_dir || true
   rm -rf $build_dir/public
   mv $tmp_dir  $build_dir/public
+  echo 5
 fi
 shopt -u extglob
 
